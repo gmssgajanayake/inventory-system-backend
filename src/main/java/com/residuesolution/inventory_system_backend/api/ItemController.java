@@ -1,7 +1,7 @@
 package com.residuesolution.inventory_system_backend.api;
 
 
-import com.residuesolution.inventory_system_backend.dto.request.ItemRequestDTO;
+import com.residuesolution.inventory_system_backend.dto.request.item.ItemRequestDTO;
 import com.residuesolution.inventory_system_backend.util.StanderResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

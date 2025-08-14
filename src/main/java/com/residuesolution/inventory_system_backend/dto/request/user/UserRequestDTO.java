@@ -1,4 +1,4 @@
-package com.residuesolution.inventory_system_backend.dto.request;
+package com.residuesolution.inventory_system_backend.dto.request.user;
 
 
 import com.residuesolution.inventory_system_backend.enums.Role;
