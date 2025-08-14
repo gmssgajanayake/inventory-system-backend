@@ -8,7 +8,6 @@ import com.residuesolution.inventory_system_backend.util.mapper.UserMapper;
 import org.springframework.stereotype.Service;
 
 
-
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -19,7 +18,6 @@ public class UserServiceImpl implements UserService {
         this.userRepo = userRepo;
         this.userMapper = userMapper;
     }
-
 
 
     @Override
