@@ -1,7 +1,9 @@
 package com.residuesolution.inventory_system_backend.api;
 
 
-import com.residuesolution.inventory_system_backend.dto.request.ItemDto;
+import com.residuesolution.inventory_system_backend.dto.request.ItemRequestDTO;
+import com.residuesolution.inventory_system_backend.util.StanderResponse;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -9,21 +11,21 @@ import org.springframework.web.bind.annotation.*;
 public class ItemController {
 
     @GetMapping
-    public String getAllItems() {
-        System.out.println("ItemDto is working");
-        return "all items";
+    public ResponseEntity<StanderResponse> getAllItems() {
+        System.out.println("ItemRequestDTO is working");
+        return null;
     }
 
     @PostMapping("/add")
-    public String addItem(@RequestBody ItemDto itemDto) {
-        return "add itemDto";
+    public ResponseEntity<StanderResponse> addItem(@RequestBody ItemRequestDTO itemDto) {
+        return null;
     }
 
     //Admin can update item by id
 
     @PutMapping("/{id}")
-    public String updateItemById(@PathVariable int id, @RequestBody ItemDto itemDto){
-        return "update itemDto with id: " ;
+    public ResponseEntity<StanderResponse> updateItemById(@PathVariable int id, @RequestBody ItemRequestDTO itemDto){
+        return null ;
     }
 
 //    @PutMapping("/{id}")

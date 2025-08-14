@@ -1,5 +1,7 @@
 package com.residuesolution.inventory_system_backend.api;
 
+import com.residuesolution.inventory_system_backend.util.StanderResponse;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -7,18 +9,18 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     @GetMapping
-    public String getAllUsers(){
-        return "all users";
+    public ResponseEntity<StanderResponse> getAllUsers(){
+        return null ;
     }
 
     @PutMapping("/{id}")
-    public String updateUserRoleById(@RequestParam int id){
-        return "user";
+    public ResponseEntity<StanderResponse> updateUserRoleById(@RequestParam int id){
+        return null;
     }
 
     @DeleteMapping("/{id}")
-    public String deleteUserById(@RequestParam int id){
-        return "user deleted";
+    public ResponseEntity<StanderResponse> deleteUserById(@RequestParam int id){
+        return null;
     }
 
 }

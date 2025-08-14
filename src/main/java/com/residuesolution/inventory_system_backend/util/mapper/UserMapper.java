@@ -1,0 +1,21 @@
+package com.residuesolution.inventory_system_backend.util.mapper;
+
+import com.residuesolution.inventory_system_backend.dto.request.UserRequestDTO;
+import com.residuesolution.inventory_system_backend.dto.response.UserResponseDTO;
+import com.residuesolution.inventory_system_backend.entity.User;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.factory.Mappers;
+
+@Mapper(componentModel = "spring")
+public interface UserMapper {
+
+    UserMapper INSTANCE = Mappers.getMapper(UserMapper.class);
+
+    User toUser(UserRequestDTO userRequestDTO);
+
+    UserResponseDTO toUserResponseDTO(User user);
+
+    // If needed in future:
+    // List<UserResponseDTO> toUserResponseDTOList(List<User> users);
+}
