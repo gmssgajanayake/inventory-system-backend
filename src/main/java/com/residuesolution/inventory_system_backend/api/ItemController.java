@@ -1,7 +1,7 @@
-package com.residuesolution.inventory_system_backend.controller;
+package com.residuesolution.inventory_system_backend.api;
 
 
-import com.residuesolution.inventory_system_backend.model.Item;
+import com.residuesolution.inventory_system_backend.dto.request.ItemDto;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -10,20 +10,20 @@ public class ItemController {
 
     @GetMapping
     public String getAllItems() {
-        System.out.println("Item is working");
+        System.out.println("ItemDto is working");
         return "all items";
     }
 
     @PostMapping("/add")
-    public String addItem(@RequestBody Item item) {
-        return "add item";
+    public String addItem(@RequestBody ItemDto itemDto) {
+        return "add itemDto";
     }
 
     //Admin can update item by id
 
     @PutMapping("/{id}")
-    public String updateItemById(@PathVariable int id, @RequestBody Item item){
-        return "update item with id: " ;
+    public String updateItemById(@PathVariable int id, @RequestBody ItemDto itemDto){
+        return "update itemDto with id: " ;
     }
 
 //    @PutMapping("/{id}")

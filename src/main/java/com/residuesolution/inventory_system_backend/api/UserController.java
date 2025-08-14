@@ -1,4 +1,4 @@
-package com.residuesolution.inventory_system_backend.controller;
+package com.residuesolution.inventory_system_backend.api;
 
 import org.springframework.web.bind.annotation.*;
 
