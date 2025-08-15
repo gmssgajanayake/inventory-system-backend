@@ -19,11 +19,4 @@ public interface UserService {
 
     UserResponseDTO deleteUserById(Long id);
 
-    String getUser(String username, String password);
-
-    String updateUser(String username, String password, String newPassword);
-
-    String deleteUser(String username, String password);
-
-
 }
