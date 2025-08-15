@@ -15,4 +15,6 @@ public interface ItemService {
 
     ItemResponseDTO updateItemByID(Long id, ItemRequestDTO itemRequestDTO);
 
+    ItemResponseDTO deleteItemById(Long id);
+
 }

@@ -34,7 +34,9 @@ public class ItemServiceImpl implements ItemService {
 
         List<Item> allItems = itemRepo.findAll();
 
-        if(allItems.isEmpty()) return null;
+        if (allItems.isEmpty()) {
+            return null;
+        }
 
         return itemMapper.toItemResponseDTO(itemRepo.findAll());
     }
@@ -42,20 +44,32 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public ItemResponseDTO updateItemByID(Long id, ItemRequestDTO itemRequestDTO) {
 
-      return  itemMapper.toItemResponseDTO(
+        return itemMapper.toItemResponseDTO(
 
-              itemRepo.findById(id).map(
-                      item -> {
+                itemRepo.findById(id).map(
+                        item -> {
 
-                          item.setName(itemRequestDTO.getName());
-                          item.setDescription(itemRequestDTO.getDescription());
-                          item.setPrice(itemRequestDTO.getPrice());
-                          item.setQuantity(itemRequestDTO.getQuantity());
+                            item.setName(itemRequestDTO.getName());
+                            item.setDescription(itemRequestDTO.getDescription());
+                            item.setPrice(itemRequestDTO.getPrice());
+                            item.setQuantity(itemRequestDTO.getQuantity());
 
-                          return itemRepo.save(item);
-                      }
-              ).orElse(null)
-      );
+                            return itemRepo.save(item);
+                        }
+                ).orElse(null)
+        );
+
+    }
+
+    @Override
+    public ItemResponseDTO deleteItemById(Long id) {
+
+        return itemRepo.findById(id).map(
+                item -> {
+                    itemRepo.delete(item);
+                    return itemMapper.toItemResponseDTO(item);
+                }
+        ).orElse(null);
 
     }
 }

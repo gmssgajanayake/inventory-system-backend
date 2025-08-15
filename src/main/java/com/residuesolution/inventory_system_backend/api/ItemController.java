@@ -74,8 +74,6 @@ public class ItemController {
                 );
     }
 
-    //Admin can update item by id
-
     @PutMapping("/{id}") // (PUT) http://localhost:8080/api/items/{id}
     public ResponseEntity<StanderResponse> updateItemById(@PathVariable Long id, @RequestBody ItemRequestDTO itemRequestDTO){
 
@@ -121,7 +119,32 @@ public class ItemController {
 
     @DeleteMapping("/{id}") // (DELETE) http://localhost:8080/api/items/{id}
     public ResponseEntity<StanderResponse> deleteItemById(@PathVariable Long id){
-        return null ;
+
+        ItemResponseDTO itemResponseDTO = itemService.deleteItemById(id);
+
+        return itemResponseDTO == null ?
+
+                ResponseEntity
+                        .status(HttpStatus.NOT_FOUND)
+                        .body(
+                                StanderResponse.builder()
+                                        .statusCode(404)
+                                        .message("Item not found with id: " + id)
+                                        .data(null)
+                                        .build()
+                        )
+                :
+
+                ResponseEntity
+                        .status(HttpStatus.OK)
+                        .body(
+                                StanderResponse.builder()
+                                        .statusCode(200)
+                                        .message("Item deleted successfully!")
+                                        .data(itemResponseDTO)
+                                        .build()
+                        );
+
     }
 
 }
