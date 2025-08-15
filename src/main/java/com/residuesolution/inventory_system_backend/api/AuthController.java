@@ -2,6 +2,7 @@ package com.residuesolution.inventory_system_backend.api;
 
 import com.residuesolution.inventory_system_backend.dto.request.user.UserCredentialDTO;
 import com.residuesolution.inventory_system_backend.dto.request.user.UserRequestDTO;
+import com.residuesolution.inventory_system_backend.dto.response.user.UserResponseDTO;
 import com.residuesolution.inventory_system_backend.service.UserService;
 import com.residuesolution.inventory_system_backend.util.StanderResponse;
 import org.springframework.http.HttpStatus;
@@ -50,26 +51,30 @@ public class AuthController {
     @PostMapping("/login") // (POST) http://localhost:8080/api/auth/login
     public ResponseEntity<StanderResponse> login(@RequestBody UserCredentialDTO userCredentialDTO) {
 
-        if(userService.findUserByUserCredential(userCredentialDTO) == null)
-            return ResponseEntity
-                    .status(HttpStatus.UNAUTHORIZED)
-                    .body(
-                            StanderResponse.builder()
-                                    .statusCode(401)
-                                    .message("Invalid username or password!")
-                                    .data(null).build()
-                    );
+        UserResponseDTO foundUser = userService.findUserByUserCredential(userCredentialDTO);
 
-        return ResponseEntity
-                .status(HttpStatus.FOUND)
-                .body(
-                        StanderResponse.builder()
-                                .statusCode(200)
-                                .message("User logged in successfully!")
-                                .data(
-                                        userService.findUserByUserCredential(userCredentialDTO)
-                                ).build()
-                );
+        return foundUser == null ?
+
+                ResponseEntity
+                        .status(HttpStatus.UNAUTHORIZED)
+                        .body(
+                                StanderResponse.builder()
+                                        .statusCode(401)
+                                        .message("Invalid username or password!")
+                                        .data(null).build()
+                        )
+                :
+
+                ResponseEntity
+                        .status(HttpStatus.FOUND)
+                        .body(
+                                StanderResponse.builder()
+                                        .statusCode(200)
+                                        .message("User logged in successfully!")
+                                        .data(
+                                                foundUser
+                                        ).build()
+                        );
     }
 
 }

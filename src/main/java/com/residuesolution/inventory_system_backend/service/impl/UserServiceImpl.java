@@ -10,6 +10,8 @@ import com.residuesolution.inventory_system_backend.util.mapper.UserMapper;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -46,23 +48,18 @@ public class UserServiceImpl implements UserService {
 
         // Using UserMapper to convert UserRequestDTO to User and then to UserResponseDTO
 
-        User user = userMapper.toUser(userRequestDTO);
-
-        System.out.println(user.getPassword());
-        System.out.println(user.getUsername());
-        System.out.println(user.getRole());
-
-        User savedUser = userRepo.save(user);
-
-        UserResponseDTO userResponseDto = userMapper.toUserResponseDTO(savedUser);
+//        User user = userMapper.toUser(userRequestDTO);
+//
+//        User savedUser = userRepo.save(user);
+//
+//        UserResponseDTO userResponseDto = userMapper.toUserResponseDTO(savedUser);
 
         // Simplified version using UserMapper
 
 
-        return  userResponseDto;
+        //return  userResponseDto;
 
-        //return userMapper.toUserResponseDTO(userRepo.save(userMapper.toUser(userRequestDTO)));
-
+        return userMapper.toUserResponseDTO(userRepo.save(userMapper.toUser(userRequestDTO)));
 
     }
 
@@ -71,11 +68,53 @@ public class UserServiceImpl implements UserService {
 
         User userDetails = userRepo.findByUsername(userCredentialDTO.getUsername());
 
-        if(userDetails != null && bCryptPasswordEncoder.matches(userCredentialDTO.getPassword(), userDetails.getPassword())) {
+        if (userDetails != null && bCryptPasswordEncoder.matches(userCredentialDTO.getPassword(), userDetails.getPassword())) {
             return userMapper.toUserResponseDTO(userDetails);
         }
 
         return null;
+    }
+
+    @Override
+    public List<UserResponseDTO> getAllUsers() {
+        List<User> usersList = userRepo.findAll();
+
+        if (usersList.isEmpty()) {
+            return null;
+        }
+
+        return userMapper.toUserResponseDTO(usersList);
+    }
+
+    @Override
+    public UserResponseDTO updateUserByID(Long id, UserRequestDTO userRequestDTO) {
+
+        return userMapper.toUserResponseDTO(userRepo.findById(id).map(
+                user -> {
+
+                    user.setUsername(userRequestDTO.getUsername());
+                    user.setPassword(bCryptPasswordEncoder.encode(userRequestDTO.getPassword()));
+                    user.setRole(userRequestDTO.getRole());
+
+                    // Hers I want to pass same user object to update the existing user
+                    return userRepo.save(user);
+                }
+        ).orElse(null));
+
+    }
+
+    @Override
+    public UserResponseDTO deleteUserById(Long id) {
+
+
+        return userMapper.toUserResponseDTO(userRepo.findById(id).map(
+                user -> {
+                    userRepo.delete(user);
+                    return user;
+                }
+        ).orElseThrow(() -> new RuntimeException("User not found with id: " + id)));
+
+
     }
 
     @Override
@@ -93,8 +132,5 @@ public class UserServiceImpl implements UserService {
         return "";
     }
 
-    @Override
-    public String getAllUsers() {
-        return "";
-    }
+
 }

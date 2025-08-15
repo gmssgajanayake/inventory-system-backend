@@ -4,22 +4,26 @@ import com.residuesolution.inventory_system_backend.dto.request.user.UserCredent
 import com.residuesolution.inventory_system_backend.dto.request.user.UserRequestDTO;
 import com.residuesolution.inventory_system_backend.dto.response.user.UserResponseDTO;
 
+import java.util.List;
 
 
 public interface UserService {
 
-    public UserResponseDTO registerUser(UserRequestDTO userRequestDTO);
+    UserResponseDTO registerUser(UserRequestDTO userRequestDTO);
 
-    public UserResponseDTO findUserByUserCredential(UserCredentialDTO userCredentialDTO);
+    UserResponseDTO findUserByUserCredential(UserCredentialDTO userCredentialDTO);
 
-    public String getUser(String username, String password);
+    List<UserResponseDTO> getAllUsers();
 
-    public String updateUser(String username, String password, String newPassword);
+    UserResponseDTO updateUserByID(Long id, UserRequestDTO userRequestDTO);
 
-    public String deleteUser(String username, String password);
+    UserResponseDTO deleteUserById(Long id);
 
-    public String getAllUsers();
+    String getUser(String username, String password);
 
+    String updateUser(String username, String password, String newPassword);
+
+    String deleteUser(String username, String password);
 
 
 }
