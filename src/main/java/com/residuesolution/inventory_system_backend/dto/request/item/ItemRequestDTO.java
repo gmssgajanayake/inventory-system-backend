@@ -1,4 +1,4 @@
-package com.residuesolution.inventory_system_backend.dto.request;
+package com.residuesolution.inventory_system_backend.dto.request.item;
 
 
 import lombok.AllArgsConstructor;

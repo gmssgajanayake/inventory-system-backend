@@ -5,10 +5,10 @@ import org.springframework.stereotype.Service;
 
 public interface ItemService {
 
-    public String getAllItems();
+    String getAllItems();
 
-    public String addItem(String itemId);
+    String addItem(String itemId);
 
-    public String updateItem(String itemId);
+    String updateItem(String itemId);
 
 }
