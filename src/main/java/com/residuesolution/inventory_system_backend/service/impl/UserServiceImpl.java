@@ -11,7 +11,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -79,9 +78,7 @@ public class UserServiceImpl implements UserService {
     public List<UserResponseDTO> getAllUsers() {
         List<User> usersList = userRepo.findAll();
 
-        if (usersList.isEmpty()) {
-            return null;
-        }
+        if (usersList.isEmpty()) return null;
 
         return userMapper.toUserResponseDTO(usersList);
     }
@@ -116,21 +113,5 @@ public class UserServiceImpl implements UserService {
 
 
     }
-
-    @Override
-    public String getUser(String username, String password) {
-        return "";
-    }
-
-    @Override
-    public String updateUser(String username, String password, String newPassword) {
-        return "";
-    }
-
-    @Override
-    public String deleteUser(String username, String password) {
-        return "";
-    }
-
 
 }

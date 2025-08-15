@@ -1,14 +1,20 @@
 package com.residuesolution.inventory_system_backend.service;
 
+import com.residuesolution.inventory_system_backend.dto.request.item.ItemRequestDTO;
+import com.residuesolution.inventory_system_backend.dto.response.item.ItemResponseDTO;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 
 public interface ItemService {
 
-    String getAllItems();
+    ItemResponseDTO addItems(ItemRequestDTO itemRequestDTO);
 
-    String addItem(String itemId);
+    List<ItemResponseDTO> getAllItems();
 
-    String updateItem(String itemId);
+    ItemResponseDTO updateItemByID(Long id, ItemRequestDTO itemRequestDTO);
+
+    ItemResponseDTO deleteItemById(Long id);
 
 }
