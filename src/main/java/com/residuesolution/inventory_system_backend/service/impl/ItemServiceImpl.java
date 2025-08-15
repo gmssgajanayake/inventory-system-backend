@@ -2,10 +2,13 @@ package com.residuesolution.inventory_system_backend.service.impl;
 
 import com.residuesolution.inventory_system_backend.dto.request.item.ItemRequestDTO;
 import com.residuesolution.inventory_system_backend.dto.response.item.ItemResponseDTO;
+import com.residuesolution.inventory_system_backend.entity.Item;
 import com.residuesolution.inventory_system_backend.repo.ItemRepo;
 import com.residuesolution.inventory_system_backend.service.ItemService;
 import com.residuesolution.inventory_system_backend.util.mapper.ItemMapper;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class ItemServiceImpl implements ItemService {
@@ -24,5 +27,35 @@ public class ItemServiceImpl implements ItemService {
         return itemMapper.toItemResponseDTO(
                 itemRepo.save(itemMapper.toItem(itemRequestDTO))
         );
+    }
+
+    @Override
+    public List<ItemResponseDTO> getAllItems() {
+
+        List<Item> allItems = itemRepo.findAll();
+
+        if(allItems.isEmpty()) return null;
+
+        return itemMapper.toItemResponseDTO(itemRepo.findAll());
+    }
+
+    @Override
+    public ItemResponseDTO updateItemByID(Long id, ItemRequestDTO itemRequestDTO) {
+
+      return  itemMapper.toItemResponseDTO(
+
+              itemRepo.findById(id).map(
+                      item -> {
+
+                          item.setName(itemRequestDTO.getName());
+                          item.setDescription(itemRequestDTO.getDescription());
+                          item.setPrice(itemRequestDTO.getPrice());
+                          item.setQuantity(itemRequestDTO.getQuantity());
+
+                          return itemRepo.save(item);
+                      }
+              ).orElse(null)
+      );
+
     }
 }

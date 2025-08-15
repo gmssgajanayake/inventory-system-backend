@@ -78,9 +78,7 @@ public class UserServiceImpl implements UserService {
     public List<UserResponseDTO> getAllUsers() {
         List<User> usersList = userRepo.findAll();
 
-        if (usersList.isEmpty()) {
-            return null;
-        }
+        if (usersList.isEmpty()) return null;
 
         return userMapper.toUserResponseDTO(usersList);
     }
