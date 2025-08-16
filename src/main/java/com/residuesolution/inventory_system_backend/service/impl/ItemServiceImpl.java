@@ -6,6 +6,7 @@ import com.residuesolution.inventory_system_backend.entity.ItemEntity;
 import com.residuesolution.inventory_system_backend.repository.ItemRepo;
 import com.residuesolution.inventory_system_backend.service.ItemService;
 import com.residuesolution.inventory_system_backend.util.mapper.ItemMapper;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -48,6 +49,15 @@ public class ItemServiceImpl implements ItemService {
 
                 itemRepo.findById(id).map(
                         itemEntity -> {
+
+                            if (SecurityContextHolder.getContext().getAuthentication().getAuthorities()
+                                    .stream().anyMatch(
+                                            user -> user.getAuthority().equals("ROLE_USER")
+                                    )
+                            ) {
+                                itemEntity.setQuantity(itemRequestDTO.getQuantity());
+                                return itemRepo.save(itemEntity);
+                            }
 
                             itemEntity.setName(itemRequestDTO.getName());
                             itemEntity.setDescription(itemRequestDTO.getDescription());

@@ -1,12 +1,15 @@
 package com.residuesolution.inventory_system_backend.service;
 
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
+import java.util.Date;
+import java.util.Map;
 
 @Service
 public class JWTService {
@@ -26,26 +29,34 @@ public class JWTService {
         }
     }
 
-    public String generateToken() {
+    public String getToken(String username, Map<String, Object> claims) {
         return Jwts.builder()
-                .subject("user")
+                .claims(claims)
+                .subject(username)
+                .issuedAt(new Date(System.currentTimeMillis()))
+                .expiration(new Date(System.currentTimeMillis() + (15 * 60 * 1000)))
                 .signWith(secretKey)
                 .compact();
     }
 
-    public String getUsername(String jwtToken) {
-        try{
+    public String getUsername(String token) {
+        Claims claims = getTokenData(token);
+        if (claims == null) {
+            return null;
+        }
+        return claims.getSubject();
+    }
+
+    private Claims getTokenData(String token) {
+        try {
             return Jwts
                     .parser()
                     .verifyWith(secretKey).build()
-                    .parseSignedClaims(jwtToken)
-                    .getPayload()
-                    .getSubject();
-        }catch (Exception e) {
+                    .parseSignedClaims(token)
+                    .getPayload();
+        } catch (Exception e) {
             return null;
         }
-
-
     }
 
 }

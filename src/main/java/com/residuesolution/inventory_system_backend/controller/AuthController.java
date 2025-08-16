@@ -19,34 +19,19 @@ public class AuthController {
 
     private final UserService userService;
 
-    private final JWTService jwtService;
-
     public AuthController(UserService userService, JWTService jwtService) {
         this.userService = userService;
-        this.jwtService = jwtService;
     }
 
     @PostMapping("/register")  // (POST) http://localhost:8080/api/auth/register
     public ResponseEntity<StanderResponse> register(@RequestBody UserRequestDTO userRequestDTO) {
-        /*
-
-        return new ResponseEntity<>(
-                new StanderResponse(
-                        201,
-                        " UserEntity registered successfully!",
-                        userService.registerUser(userRequestDTO)
-                ),
-                HttpStatus.CREATED
-        );
-
-         */
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(
                         StanderResponse.builder()
                                 .statusCode(201)
-                                .message("UserEntity registered successfully!")
+                                .message("User registered successfully!")
                                 .data(userService.registerUser(userRequestDTO))
                                 .build()
                 );
@@ -55,10 +40,7 @@ public class AuthController {
     @PostMapping("/login") // (POST) http://localhost:8080/api/auth/login
     public ResponseEntity<StanderResponse> login(@RequestBody UserLoginCredentialDTO userLoginCredentialDTO) {
 
-
         UserLoginResponseDTO authenticUser = userService.userAuthentication(userLoginCredentialDTO);
-
-        System.out.println(jwtService.generateToken());
 
         return authenticUser == null ?
                 ResponseEntity
@@ -76,7 +58,7 @@ public class AuthController {
                         .body(
                                 StanderResponse.builder()
                                         .statusCode(200)
-                                        .message("UserEntity logged in successfully!")
+                                        .message("User logged in successfully!")
                                         .data(
                                                 authenticUser
                                         ).build()

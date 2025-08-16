@@ -20,9 +20,11 @@ public interface UserService extends UserDetailsService {
 
     List<UserResponseDTO> getAllUsers();
 
-    UserResponseDTO updateUserByID(Long id, UserRequestDTO userRequestDTO);
+    UserResponseDTO updateUserRoleByID(Long id, UserRequestDTO userRequestDTO);
 
     UserResponseDTO deleteUserById(Long id);
 
     UserResponseDTO findUserByUsername(String username);
+
+    boolean isAdminExists();
 }

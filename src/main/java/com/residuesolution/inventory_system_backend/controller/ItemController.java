@@ -5,7 +5,6 @@ import com.residuesolution.inventory_system_backend.dto.request.item.ItemRequest
 import com.residuesolution.inventory_system_backend.dto.response.item.ItemResponseDTO;
 import com.residuesolution.inventory_system_backend.service.ItemService;
 import com.residuesolution.inventory_system_backend.util.StanderResponse;
-import com.residuesolution.inventory_system_backend.util.mapper.ItemMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +17,7 @@ public class ItemController {
 
     private final ItemService itemService;
 
-    public ItemController(ItemService itemService, ItemMapper itemMapper) {
+    public ItemController(ItemService itemService) {
         this.itemService = itemService;
     }
 
@@ -73,6 +72,7 @@ public class ItemController {
                                 .build()
                 );
     }
+
 
     @PutMapping("/{id}") // (PUT) http://localhost:8080/api/items/{id}
     public ResponseEntity<StanderResponse> updateItemById(@PathVariable Long id, @RequestBody ItemRequestDTO itemRequestDTO){

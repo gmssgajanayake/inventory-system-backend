@@ -1,7 +1,7 @@
 package com.residuesolution.inventory_system_backend.dto.response.user;
 
 
-import com.residuesolution.inventory_system_backend.enums.Role;
+import com.residuesolution.inventory_system_backend.config.permission.Role;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

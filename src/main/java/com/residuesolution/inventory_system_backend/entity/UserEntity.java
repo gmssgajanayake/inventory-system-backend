@@ -1,6 +1,6 @@
 package com.residuesolution.inventory_system_backend.entity;
 
-import com.residuesolution.inventory_system_backend.enums.Role;
+import com.residuesolution.inventory_system_backend.config.permission.Role;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;

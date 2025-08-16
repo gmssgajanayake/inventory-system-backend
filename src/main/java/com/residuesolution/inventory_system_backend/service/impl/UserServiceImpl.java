@@ -6,10 +6,9 @@ import com.residuesolution.inventory_system_backend.dto.response.user.UserLoginR
 import com.residuesolution.inventory_system_backend.dto.response.user.UserResponseDTO;
 import com.residuesolution.inventory_system_backend.entity.UserEntity;
 import com.residuesolution.inventory_system_backend.repository.UserRepo;
+import com.residuesolution.inventory_system_backend.service.JWTService;
 import com.residuesolution.inventory_system_backend.service.UserService;
 import com.residuesolution.inventory_system_backend.util.mapper.UserMapper;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -17,7 +16,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+
+import static com.residuesolution.inventory_system_backend.config.permission.Role.ADMIN;
+import static com.residuesolution.inventory_system_backend.config.permission.Role.USER;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -25,50 +28,19 @@ public class UserServiceImpl implements UserService {
     private final UserRepo userRepo;
     private final UserMapper userMapper;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
-    //private final AuthenticationManager authenticationManager;
+    private  final JWTService jwtService;
 
-    public UserServiceImpl(UserRepo userRepo, UserMapper userMapper, BCryptPasswordEncoder bCryptPasswordEncoder) {
+    public UserServiceImpl(UserRepo userRepo, UserMapper userMapper, BCryptPasswordEncoder bCryptPasswordEncoder, JWTService jwtService) {
         this.userRepo = userRepo;
         this.userMapper = userMapper;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
-        //this.authenticationManager = authenticationManager;
+        this.jwtService = jwtService;
     }
 
     @Override
     public UserResponseDTO registerUser(UserRequestDTO userRequestDTO) {
-
-        // Encrypt the password before saving
         userRequestDTO.setPassword(bCryptPasswordEncoder.encode(userRequestDTO.getPassword()));
-
-        /*UserEntity user = new UserEntity();
-        user.setUsername(userRequestDTO.getUserName());
-        user.setPassword(userRequestDTO.getPassword());
-        user.setRole(userRequestDTO.getRole());
-
-        UserEntity save = userRepo.save(user);
-
-        UserResponseDTO userResponseDto = new UserResponseDTO();
-        userResponseDto.setId(save.getId());
-        userResponseDto.setUsername(save.getUsername());
-        userResponseDto.setPassword(save.getPassword());
-        userResponseDto.setRole(save.getRole());*/
-
-
-        // Using UserMapper to convert UserRequestDTO to UserEntity and then to UserResponseDTO
-
-//        UserEntity user = userMapper.toUser(userRequestDTO);
-//
-//        UserEntity savedUser = userRepo.save(user);
-//
-//        UserResponseDTO userResponseDto = userMapper.toUserResponseDTO(savedUser);
-
-        // Simplified version using UserMapper
-
-
-        //return  userResponseDto;
-
         return userMapper.toUserResponseDTO(userRepo.save(userMapper.toUserEntity(userRequestDTO)));
-
     }
 
     @Override
@@ -76,14 +48,17 @@ public class UserServiceImpl implements UserService {
 
         UserEntity userEntityDetails = userRepo.findByUsername(userLoginCredentialDTO.getUsername());
 
-        if (userEntityDetails != null) {
-
-//            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-//                    userLoginCredentialDTO.getUsername(),userLoginCredentialDTO.getPassword()
-//            ));
-
+        if (userEntityDetails != null &&
+                bCryptPasswordEncoder.matches(userLoginCredentialDTO.getPassword(), userEntityDetails.getPassword())) {
             UserLoginResponseDTO userLoginResponseDTO = userMapper.toUserLoginResponseDTO(userEntityDetails);
-            userLoginResponseDTO.setToken("token");
+
+
+            HashMap<String, Object> claims = new HashMap<>();
+            claims.put("id", userEntityDetails.getId());
+            claims.put("username", userLoginCredentialDTO.getUsername());
+            claims.put("role", userEntityDetails.getRole().toString());
+
+            userLoginResponseDTO.setToken(jwtService.getToken(userLoginResponseDTO.getUsername(),claims));
             userLoginResponseDTO.setExpirDate(new Date());
 
             return userLoginResponseDTO;
@@ -103,15 +78,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserResponseDTO updateUserByID(Long id, UserRequestDTO userRequestDTO) {
+    public UserResponseDTO updateUserRoleByID(Long id, UserRequestDTO userRequestDTO) {
 
         return userMapper.toUserResponseDTO(userRepo.findById(id).map(
                 userEntity -> {
-
-                    userEntity.setUsername(userRequestDTO.getUsername());
-                    userEntity.setPassword(bCryptPasswordEncoder.encode(userRequestDTO.getPassword()));
                     userEntity.setRole(userRequestDTO.getRole());
-
                     // Hers I want to pass same userEntity object to update the existing userEntity
                     return userRepo.save(userEntity);
                 }
@@ -137,6 +108,13 @@ public class UserServiceImpl implements UserService {
         return userMapper.toUserResponseDTO(userRepo.findByUsername(username));
     }
 
+    @Override
+    public boolean isAdminExists() {
+        return userRepo.findAll().stream().map(
+                userEntity-> userEntity.getRole()
+        ).anyMatch(role -> role.equals(ADMIN));
+    }
+
     // This method for authentication and authorization
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -145,7 +123,7 @@ public class UserServiceImpl implements UserService {
 
         return User.withUsername(userDetails.getUsername())
                 .password(userDetails.getPassword())
-                .roles(userDetails.getRole().toString())
+                .roles(userDetails.getRole() == ADMIN ? ADMIN.name()  : USER.name())
                 .build();
 
     }

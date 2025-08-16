@@ -53,7 +53,7 @@ public class UserController {
     public ResponseEntity<StanderResponse> updateUserRoleById(@PathVariable Long id,
                                                               @RequestBody UserRequestDTO userRequestDTO) {
 
-        UserResponseDTO updatedUserResponseDTO = userService.updateUserByID(id, userRequestDTO);
+        UserResponseDTO updatedUserResponseDTO = userService.updateUserRoleByID(id, userRequestDTO);
 
         return updatedUserResponseDTO == null ?
 
@@ -62,7 +62,7 @@ public class UserController {
                         .body(
                                 StanderResponse.builder()
                                         .statusCode(404)
-                                        .message("UserEntity not found with id: " + id)
+                                        .message("User not found with id: " + id)
                                         .data(null)
                                         .build()
                         )
@@ -74,7 +74,7 @@ public class UserController {
                 .body(
                         StanderResponse.builder()
                                 .statusCode(200)
-                                .message("UserEntity updated successfully!")
+                                .message("User updated successfully!")
                                 .data(updatedUserResponseDTO)
                                 .build()
                 );
@@ -90,7 +90,7 @@ public class UserController {
                         .body(
                                 StanderResponse.builder()
                                         .statusCode(404)
-                                        .message("UserEntity not found with id: " + id)
+                                        .message("User not found with id: " + id)
                                         .data(null)
                                         .build()
                         )
@@ -101,7 +101,7 @@ public class UserController {
                         .body(
                                 StanderResponse.builder()
                                         .statusCode(200)
-                                        .message("UserEntity deleted successfully!")
+                                        .message("User deleted successfully!")
                                         .data(deletedUser)
                                         .build()
                         );
