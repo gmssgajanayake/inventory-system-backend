@@ -2,9 +2,8 @@ package com.residuesolution.inventory_system_backend.util.mapper;
 
 import com.residuesolution.inventory_system_backend.dto.request.user.UserRequestDTO;
 import com.residuesolution.inventory_system_backend.dto.response.user.UserResponseDTO;
-import com.residuesolution.inventory_system_backend.entity.User;
+import com.residuesolution.inventory_system_backend.entity.UserEntity;
 import org.mapstruct.Mapper;
-import org.mapstruct.factory.Mappers;
 
 import java.util.List;
 
@@ -13,10 +12,10 @@ public interface UserMapper {
 
     //UserMapper INSTANCE = Mappers.getMapper(UserMapper.class);
 
-    User toUser(UserRequestDTO userRequestDTO);
+    UserEntity toUserEntity(UserRequestDTO userRequestDTO);
 
-    UserResponseDTO toUserResponseDTO(User user);
+    UserResponseDTO toUserResponseDTO(UserEntity userEntity);
 
-    List<UserResponseDTO> toUserResponseDTO(List<User> users);
+    List<UserResponseDTO> toUserResponseDTO(List<UserEntity> userEntityEntities);
 
 }

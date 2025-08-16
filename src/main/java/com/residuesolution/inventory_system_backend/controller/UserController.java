@@ -62,7 +62,7 @@ public class UserController {
                         .body(
                                 StanderResponse.builder()
                                         .statusCode(404)
-                                        .message("User not found with id: " + id)
+                                        .message("UserEntity not found with id: " + id)
                                         .data(null)
                                         .build()
                         )
@@ -74,7 +74,7 @@ public class UserController {
                 .body(
                         StanderResponse.builder()
                                 .statusCode(200)
-                                .message("User updated successfully!")
+                                .message("UserEntity updated successfully!")
                                 .data(updatedUserResponseDTO)
                                 .build()
                 );
@@ -90,7 +90,7 @@ public class UserController {
                         .body(
                                 StanderResponse.builder()
                                         .statusCode(404)
-                                        .message("User not found with id: " + id)
+                                        .message("UserEntity not found with id: " + id)
                                         .data(null)
                                         .build()
                         )
@@ -101,7 +101,7 @@ public class UserController {
                         .body(
                                 StanderResponse.builder()
                                         .statusCode(200)
-                                        .message("User deleted successfully!")
+                                        .message("UserEntity deleted successfully!")
                                         .data(deletedUser)
                                         .build()
                         );
