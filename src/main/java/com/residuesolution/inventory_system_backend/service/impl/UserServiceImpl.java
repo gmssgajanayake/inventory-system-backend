@@ -1,18 +1,22 @@
 package com.residuesolution.inventory_system_backend.service.impl;
 
-import com.residuesolution.inventory_system_backend.dto.request.user.UserCredentialDTO;
+import com.residuesolution.inventory_system_backend.dto.request.user.UserLoginCredentialDTO;
 import com.residuesolution.inventory_system_backend.dto.request.user.UserRequestDTO;
+import com.residuesolution.inventory_system_backend.dto.response.user.UserLoginResponseDTO;
 import com.residuesolution.inventory_system_backend.dto.response.user.UserResponseDTO;
 import com.residuesolution.inventory_system_backend.entity.UserEntity;
 import com.residuesolution.inventory_system_backend.repository.UserRepo;
 import com.residuesolution.inventory_system_backend.service.UserService;
 import com.residuesolution.inventory_system_backend.util.mapper.UserMapper;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -21,11 +25,13 @@ public class UserServiceImpl implements UserService {
     private final UserRepo userRepo;
     private final UserMapper userMapper;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    //private final AuthenticationManager authenticationManager;
 
     public UserServiceImpl(UserRepo userRepo, UserMapper userMapper, BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.userRepo = userRepo;
         this.userMapper = userMapper;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+        //this.authenticationManager = authenticationManager;
     }
 
     @Override
@@ -66,13 +72,23 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserResponseDTO findUserByUserCredential(UserCredentialDTO userCredentialDTO) {
+    public UserLoginResponseDTO userAuthentication(UserLoginCredentialDTO userLoginCredentialDTO) {
 
-        UserEntity userEntityDetails = userRepo.findByUsername(userCredentialDTO.getUsername());
+        UserEntity userEntityDetails = userRepo.findByUsername(userLoginCredentialDTO.getUsername());
 
-        if (userEntityDetails != null && bCryptPasswordEncoder.matches(userCredentialDTO.getPassword(), userEntityDetails.getPassword())) {
-            return userMapper.toUserResponseDTO(userEntityDetails);
+        if (userEntityDetails != null) {
+
+//            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+//                    userLoginCredentialDTO.getUsername(),userLoginCredentialDTO.getPassword()
+//            ));
+
+            UserLoginResponseDTO userLoginResponseDTO = userMapper.toUserLoginResponseDTO(userEntityDetails);
+            userLoginResponseDTO.setToken("token");
+            userLoginResponseDTO.setExpirDate(new Date());
+
+            return userLoginResponseDTO;
         }
+
 
         return null;
     }
@@ -117,7 +133,7 @@ public class UserServiceImpl implements UserService {
 
     }
 
-    private UserResponseDTO findUserByUsername(String username) {
+    public UserResponseDTO findUserByUsername(String username) {
         return userMapper.toUserResponseDTO(userRepo.findByUsername(username));
     }
 

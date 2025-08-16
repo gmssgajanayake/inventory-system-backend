@@ -1,8 +1,8 @@
 package com.residuesolution.inventory_system_backend.controller;
 
-import com.residuesolution.inventory_system_backend.dto.request.user.UserCredentialDTO;
+import com.residuesolution.inventory_system_backend.dto.request.user.UserLoginCredentialDTO;
 import com.residuesolution.inventory_system_backend.dto.request.user.UserRequestDTO;
-import com.residuesolution.inventory_system_backend.dto.response.user.UserResponseDTO;
+import com.residuesolution.inventory_system_backend.dto.response.user.UserLoginResponseDTO;
 import com.residuesolution.inventory_system_backend.service.JWTService;
 import com.residuesolution.inventory_system_backend.service.UserService;
 import com.residuesolution.inventory_system_backend.util.StanderResponse;
@@ -53,15 +53,14 @@ public class AuthController {
     }
 
     @PostMapping("/login") // (POST) http://localhost:8080/api/auth/login
-    public ResponseEntity<StanderResponse> login(@RequestBody UserCredentialDTO userCredentialDTO) {
+    public ResponseEntity<StanderResponse> login(@RequestBody UserLoginCredentialDTO userLoginCredentialDTO) {
 
-        String jwtToken = jwtService.getJWTToken();
-        System.out.println(jwtService.getUsername());
 
-        UserResponseDTO foundUser = userService.findUserByUserCredential(userCredentialDTO);
+        UserLoginResponseDTO authenticUser = userService.userAuthentication(userLoginCredentialDTO);
 
-        return foundUser == null ?
+        System.out.println(jwtService.generateToken());
 
+        return authenticUser == null ?
                 ResponseEntity
                         .status(HttpStatus.UNAUTHORIZED)
                         .body(
@@ -77,11 +76,13 @@ public class AuthController {
                         .body(
                                 StanderResponse.builder()
                                         .statusCode(200)
-                                        .message("UserEntity logged in successfully!\n"+jwtToken)
+                                        .message("UserEntity logged in successfully!")
                                         .data(
-                                                foundUser
+                                                authenticUser
                                         ).build()
                         );
+
+
     }
 
 }

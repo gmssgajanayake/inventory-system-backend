@@ -1,5 +1,6 @@
 package com.residuesolution.inventory_system_backend.config.security;
 
+import com.residuesolution.inventory_system_backend.filter.JWTFilter;
 import com.residuesolution.inventory_system_backend.service.UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -7,27 +8,24 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.SessionManagementConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
-
     private final UserService userService;
+    private final JWTFilter jwtFilter;
 
 
-    public SecurityConfig(BCryptPasswordEncoder bCryptPasswordEncoder, UserService userService) {
+    public SecurityConfig(BCryptPasswordEncoder bCryptPasswordEncoder, UserService userService, JWTFilter jwtFilter) {
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.userService = userService;
+        this.jwtFilter = jwtFilter;
     }
 
 
@@ -44,6 +42,7 @@ public class SecurityConfig {
                                 .requestMatchers("/api/auth/login","/api/items").permitAll()
                                 .anyRequest().authenticated()
                 )
+               .addFilterAfter(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                .authenticationProvider(daoAuthenticationProvider())
                .httpBasic(Customizer.withDefaults()) // Enable basic authentication for all requests
                .build();
@@ -56,5 +55,13 @@ public class SecurityConfig {
         daoAuthenticationProvider.setPasswordEncoder(bCryptPasswordEncoder);
         return daoAuthenticationProvider;
     }
+
+
+//    @Bean
+//    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+//        return authenticationConfiguration.getAuthenticationManager();
+//    }
+
+
 
 }
