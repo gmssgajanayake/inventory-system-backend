@@ -3,6 +3,7 @@ package com.residuesolution.inventory_system_backend.controller;
 import com.residuesolution.inventory_system_backend.dto.request.user.UserCredentialDTO;
 import com.residuesolution.inventory_system_backend.dto.request.user.UserRequestDTO;
 import com.residuesolution.inventory_system_backend.dto.response.user.UserResponseDTO;
+import com.residuesolution.inventory_system_backend.service.JWTService;
 import com.residuesolution.inventory_system_backend.service.UserService;
 import com.residuesolution.inventory_system_backend.util.StanderResponse;
 import org.springframework.http.HttpStatus;
@@ -18,8 +19,11 @@ public class AuthController {
 
     private final UserService userService;
 
-    public AuthController(UserService userService) {
+    private final JWTService jwtService;
+
+    public AuthController(UserService userService, JWTService jwtService) {
         this.userService = userService;
+        this.jwtService = jwtService;
     }
 
     @PostMapping("/register")  // (POST) http://localhost:8080/api/auth/register
@@ -29,7 +33,7 @@ public class AuthController {
         return new ResponseEntity<>(
                 new StanderResponse(
                         201,
-                        " User registered successfully!",
+                        " UserEntity registered successfully!",
                         userService.registerUser(userRequestDTO)
                 ),
                 HttpStatus.CREATED
@@ -42,7 +46,7 @@ public class AuthController {
                 .body(
                         StanderResponse.builder()
                                 .statusCode(201)
-                                .message("User registered successfully!")
+                                .message("UserEntity registered successfully!")
                                 .data(userService.registerUser(userRequestDTO))
                                 .build()
                 );
@@ -50,6 +54,9 @@ public class AuthController {
 
     @PostMapping("/login") // (POST) http://localhost:8080/api/auth/login
     public ResponseEntity<StanderResponse> login(@RequestBody UserCredentialDTO userCredentialDTO) {
+
+        String jwtToken = jwtService.getJWTToken();
+        System.out.println(jwtService.getUsername());
 
         UserResponseDTO foundUser = userService.findUserByUserCredential(userCredentialDTO);
 
@@ -70,7 +77,7 @@ public class AuthController {
                         .body(
                                 StanderResponse.builder()
                                         .statusCode(200)
-                                        .message("User logged in successfully!")
+                                        .message("UserEntity logged in successfully!\n"+jwtToken)
                                         .data(
                                                 foundUser
                                         ).build()

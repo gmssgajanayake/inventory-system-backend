@@ -2,7 +2,7 @@ package com.residuesolution.inventory_system_backend.service.impl;
 
 import com.residuesolution.inventory_system_backend.dto.request.item.ItemRequestDTO;
 import com.residuesolution.inventory_system_backend.dto.response.item.ItemResponseDTO;
-import com.residuesolution.inventory_system_backend.entity.Item;
+import com.residuesolution.inventory_system_backend.entity.ItemEntity;
 import com.residuesolution.inventory_system_backend.repository.ItemRepo;
 import com.residuesolution.inventory_system_backend.service.ItemService;
 import com.residuesolution.inventory_system_backend.util.mapper.ItemMapper;
@@ -25,16 +25,16 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public ItemResponseDTO addItems(ItemRequestDTO itemRequestDTO) {
         return itemMapper.toItemResponseDTO(
-                itemRepo.save(itemMapper.toItem(itemRequestDTO))
+                itemRepo.save(itemMapper.toItemEntity(itemRequestDTO))
         );
     }
 
     @Override
     public List<ItemResponseDTO> getAllItems() {
 
-        List<Item> allItems = itemRepo.findAll();
+        List<ItemEntity> allItemEntityEntities = itemRepo.findAll();
 
-        if (allItems.isEmpty()) {
+        if (allItemEntityEntities.isEmpty()) {
             return null;
         }
 
@@ -47,14 +47,14 @@ public class ItemServiceImpl implements ItemService {
         return itemMapper.toItemResponseDTO(
 
                 itemRepo.findById(id).map(
-                        item -> {
+                        itemEntity -> {
 
-                            item.setName(itemRequestDTO.getName());
-                            item.setDescription(itemRequestDTO.getDescription());
-                            item.setPrice(itemRequestDTO.getPrice());
-                            item.setQuantity(itemRequestDTO.getQuantity());
+                            itemEntity.setName(itemRequestDTO.getName());
+                            itemEntity.setDescription(itemRequestDTO.getDescription());
+                            itemEntity.setPrice(itemRequestDTO.getPrice());
+                            itemEntity.setQuantity(itemRequestDTO.getQuantity());
 
-                            return itemRepo.save(item);
+                            return itemRepo.save(itemEntity);
                         }
                 ).orElse(null)
         );
@@ -65,9 +65,9 @@ public class ItemServiceImpl implements ItemService {
     public ItemResponseDTO deleteItemById(Long id) {
 
         return itemRepo.findById(id).map(
-                item -> {
-                    itemRepo.delete(item);
-                    return itemMapper.toItemResponseDTO(item);
+                itemEntity -> {
+                    itemRepo.delete(itemEntity);
+                    return itemMapper.toItemResponseDTO(itemEntity);
                 }
         ).orElse(null);
 

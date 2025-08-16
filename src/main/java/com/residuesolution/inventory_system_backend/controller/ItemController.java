@@ -68,7 +68,7 @@ public class ItemController {
                 .body(
                         StanderResponse.builder()
                                 .statusCode(200)
-                                .message("Item added successfully!")
+                                .message("ItemEntity added successfully!")
                                 .data(itemService.addItems(itemRequestDTO))
                                 .build()
                 );
@@ -99,7 +99,7 @@ public class ItemController {
                        .body(
                                StanderResponse.builder()
                                        .statusCode(404)
-                                       .message("Item not found with id: " + id)
+                                       .message("ItemEntity not found with id: " + id)
                                        .data(null)
                                        .build()
                        )
@@ -110,7 +110,7 @@ public class ItemController {
                           .body(
                                  StanderResponse.builder()
                                         .statusCode(200)
-                                        .message("Item updated successfully!")
+                                        .message("ItemEntity updated successfully!")
                                         .data(updatedItem)
                                         .build()
                           );
@@ -129,7 +129,7 @@ public class ItemController {
                         .body(
                                 StanderResponse.builder()
                                         .statusCode(404)
-                                        .message("Item not found with id: " + id)
+                                        .message("ItemEntity not found with id: " + id)
                                         .data(null)
                                         .build()
                         )
@@ -140,7 +140,7 @@ public class ItemController {
                         .body(
                                 StanderResponse.builder()
                                         .statusCode(200)
-                                        .message("Item deleted successfully!")
+                                        .message("ItemEntity deleted successfully!")
                                         .data(itemResponseDTO)
                                         .build()
                         );

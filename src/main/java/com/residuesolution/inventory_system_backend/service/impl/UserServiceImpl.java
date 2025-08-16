@@ -3,10 +3,13 @@ package com.residuesolution.inventory_system_backend.service.impl;
 import com.residuesolution.inventory_system_backend.dto.request.user.UserCredentialDTO;
 import com.residuesolution.inventory_system_backend.dto.request.user.UserRequestDTO;
 import com.residuesolution.inventory_system_backend.dto.response.user.UserResponseDTO;
-import com.residuesolution.inventory_system_backend.entity.User;
+import com.residuesolution.inventory_system_backend.entity.UserEntity;
 import com.residuesolution.inventory_system_backend.repository.UserRepo;
 import com.residuesolution.inventory_system_backend.service.UserService;
 import com.residuesolution.inventory_system_backend.util.mapper.UserMapper;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -31,12 +34,12 @@ public class UserServiceImpl implements UserService {
         // Encrypt the password before saving
         userRequestDTO.setPassword(bCryptPasswordEncoder.encode(userRequestDTO.getPassword()));
 
-        /*User user = new User();
+        /*UserEntity user = new UserEntity();
         user.setUsername(userRequestDTO.getUserName());
         user.setPassword(userRequestDTO.getPassword());
         user.setRole(userRequestDTO.getRole());
 
-        User save = userRepo.save(user);
+        UserEntity save = userRepo.save(user);
 
         UserResponseDTO userResponseDto = new UserResponseDTO();
         userResponseDto.setId(save.getId());
@@ -45,11 +48,11 @@ public class UserServiceImpl implements UserService {
         userResponseDto.setRole(save.getRole());*/
 
 
-        // Using UserMapper to convert UserRequestDTO to User and then to UserResponseDTO
+        // Using UserMapper to convert UserRequestDTO to UserEntity and then to UserResponseDTO
 
-//        User user = userMapper.toUser(userRequestDTO);
+//        UserEntity user = userMapper.toUser(userRequestDTO);
 //
-//        User savedUser = userRepo.save(user);
+//        UserEntity savedUser = userRepo.save(user);
 //
 //        UserResponseDTO userResponseDto = userMapper.toUserResponseDTO(savedUser);
 
@@ -58,17 +61,17 @@ public class UserServiceImpl implements UserService {
 
         //return  userResponseDto;
 
-        return userMapper.toUserResponseDTO(userRepo.save(userMapper.toUser(userRequestDTO)));
+        return userMapper.toUserResponseDTO(userRepo.save(userMapper.toUserEntity(userRequestDTO)));
 
     }
 
     @Override
     public UserResponseDTO findUserByUserCredential(UserCredentialDTO userCredentialDTO) {
 
-        User userDetails = userRepo.findByUsername(userCredentialDTO.getUsername());
+        UserEntity userEntityDetails = userRepo.findByUsername(userCredentialDTO.getUsername());
 
-        if (userDetails != null && bCryptPasswordEncoder.matches(userCredentialDTO.getPassword(), userDetails.getPassword())) {
-            return userMapper.toUserResponseDTO(userDetails);
+        if (userEntityDetails != null && bCryptPasswordEncoder.matches(userCredentialDTO.getPassword(), userEntityDetails.getPassword())) {
+            return userMapper.toUserResponseDTO(userEntityDetails);
         }
 
         return null;
@@ -76,7 +79,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserResponseDTO> getAllUsers() {
-        List<User> usersList = userRepo.findAll();
+        List<UserEntity> usersList = userRepo.findAll();
 
         if (usersList.isEmpty()) return null;
 
@@ -87,14 +90,14 @@ public class UserServiceImpl implements UserService {
     public UserResponseDTO updateUserByID(Long id, UserRequestDTO userRequestDTO) {
 
         return userMapper.toUserResponseDTO(userRepo.findById(id).map(
-                user -> {
+                userEntity -> {
 
-                    user.setUsername(userRequestDTO.getUsername());
-                    user.setPassword(bCryptPasswordEncoder.encode(userRequestDTO.getPassword()));
-                    user.setRole(userRequestDTO.getRole());
+                    userEntity.setUsername(userRequestDTO.getUsername());
+                    userEntity.setPassword(bCryptPasswordEncoder.encode(userRequestDTO.getPassword()));
+                    userEntity.setRole(userRequestDTO.getRole());
 
-                    // Hers I want to pass same user object to update the existing user
-                    return userRepo.save(user);
+                    // Hers I want to pass same userEntity object to update the existing userEntity
+                    return userRepo.save(userEntity);
                 }
         ).orElse(null));
 
@@ -105,12 +108,29 @@ public class UserServiceImpl implements UserService {
 
 
         return userMapper.toUserResponseDTO(userRepo.findById(id).map(
-                user -> {
-                    userRepo.delete(user);
-                    return user;
+                userEntity -> {
+                    userRepo.delete(userEntity);
+                    return userEntity;
                 }
-        ).orElseThrow(() -> new RuntimeException("User not found with id: " + id)));
+        ).orElseThrow(() -> new RuntimeException("UserEntity not found with id: " + id)));
 
+
+    }
+
+    private UserResponseDTO findUserByUsername(String username) {
+        return userMapper.toUserResponseDTO(userRepo.findByUsername(username));
+    }
+
+    // This method for authentication and authorization
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+
+        UserResponseDTO userDetails = findUserByUsername(username);
+
+        return User.withUsername(userDetails.getUsername())
+                .password(userDetails.getPassword())
+                .roles(userDetails.getRole().toString())
+                .build();
 
     }
 
