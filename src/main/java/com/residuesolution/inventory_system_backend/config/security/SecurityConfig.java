@@ -8,16 +8,13 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
-public class ApplicationSecurityConfig{
+public class SecurityConfig {
 
     @Bean
-    public SecurityFilterChain configure(HttpSecurity http) throws Exception {
+    public SecurityFilterChain configure(HttpSecurity http ) throws Exception {
 
-        http.csrf(customizer -> customizer.disable());
-//        http.authorizeHttpRequests(customizer -> customizer
-//                .requestMatchers("/api/auth/**").permitAll()
-//                .requestMatchers("/api/users/**").hasRole("ADMIN")
-//                .anyRequest().authenticated());
+
+
         return http.build();
     }
 

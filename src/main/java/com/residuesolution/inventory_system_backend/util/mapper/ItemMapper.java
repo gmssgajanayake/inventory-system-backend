@@ -11,7 +11,8 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface ItemMapper {
 
-    UserMapper INSTANCE = Mappers.getMapper(UserMapper.class);
+    //ItemMapper INSTANCE = Mappers.getMapper(ItemMapper.class);
+
 
     ItemResponseDTO toItemResponseDTO(Item item);
 
