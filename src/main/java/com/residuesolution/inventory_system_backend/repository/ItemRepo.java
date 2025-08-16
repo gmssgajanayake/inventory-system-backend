@@ -1,4 +1,4 @@
-package com.residuesolution.inventory_system_backend.repo;
+package com.residuesolution.inventory_system_backend.repository;
 
 import com.residuesolution.inventory_system_backend.entity.Item;
 import org.springframework.data.jpa.repository.JpaRepository;

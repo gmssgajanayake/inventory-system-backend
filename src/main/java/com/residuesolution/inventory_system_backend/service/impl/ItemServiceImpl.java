@@ -3,7 +3,7 @@ package com.residuesolution.inventory_system_backend.service.impl;
 import com.residuesolution.inventory_system_backend.dto.request.item.ItemRequestDTO;
 import com.residuesolution.inventory_system_backend.dto.response.item.ItemResponseDTO;
 import com.residuesolution.inventory_system_backend.entity.Item;
-import com.residuesolution.inventory_system_backend.repo.ItemRepo;
+import com.residuesolution.inventory_system_backend.repository.ItemRepo;
 import com.residuesolution.inventory_system_backend.service.ItemService;
 import com.residuesolution.inventory_system_backend.util.mapper.ItemMapper;
 import org.springframework.stereotype.Service;

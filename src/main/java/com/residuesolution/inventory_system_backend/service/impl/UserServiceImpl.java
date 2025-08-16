@@ -4,7 +4,7 @@ import com.residuesolution.inventory_system_backend.dto.request.user.UserCredent
 import com.residuesolution.inventory_system_backend.dto.request.user.UserRequestDTO;
 import com.residuesolution.inventory_system_backend.dto.response.user.UserResponseDTO;
 import com.residuesolution.inventory_system_backend.entity.User;
-import com.residuesolution.inventory_system_backend.repo.UserRepo;
+import com.residuesolution.inventory_system_backend.repository.UserRepo;
 import com.residuesolution.inventory_system_backend.service.UserService;
 import com.residuesolution.inventory_system_backend.util.mapper.UserMapper;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;

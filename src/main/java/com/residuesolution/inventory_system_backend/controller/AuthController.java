@@ -1,4 +1,4 @@
-package com.residuesolution.inventory_system_backend.api;
+package com.residuesolution.inventory_system_backend.controller;
 
 import com.residuesolution.inventory_system_backend.dto.request.user.UserCredentialDTO;
 import com.residuesolution.inventory_system_backend.dto.request.user.UserRequestDTO;
