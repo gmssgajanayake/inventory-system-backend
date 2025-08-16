@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
-import java.util.Date;
 
 @Service
 public class JWTService {
@@ -27,25 +26,26 @@ public class JWTService {
         }
     }
 
-
-    public String getJWTToken() {
+    public String generateToken() {
         return Jwts.builder()
-                .subject("sakuja")
-                .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + 3600000)) // 1 hour
+                .subject("user")
                 .signWith(secretKey)
                 .compact();
     }
 
+    public String getUsername(String jwtToken) {
+        try{
+            return Jwts
+                    .parser()
+                    .verifyWith(secretKey).build()
+                    .parseSignedClaims(jwtToken)
+                    .getPayload()
+                    .getSubject();
+        }catch (Exception e) {
+            return null;
+        }
 
-    public String getUsername() {
-        return Jwts
-                .parser()
-                .verifyWith(secretKey).build()
-                .parseSignedClaims(getJWTToken())
-                .getPayload()
-                .getSubject();
+
     }
-
 
 }

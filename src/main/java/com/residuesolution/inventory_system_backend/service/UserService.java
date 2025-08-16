@@ -1,7 +1,8 @@
 package com.residuesolution.inventory_system_backend.service;
 
-import com.residuesolution.inventory_system_backend.dto.request.user.UserCredentialDTO;
+import com.residuesolution.inventory_system_backend.dto.request.user.UserLoginCredentialDTO;
 import com.residuesolution.inventory_system_backend.dto.request.user.UserRequestDTO;
+import com.residuesolution.inventory_system_backend.dto.response.user.UserLoginResponseDTO;
 import com.residuesolution.inventory_system_backend.dto.response.user.UserResponseDTO;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
@@ -15,7 +16,7 @@ public interface UserService extends UserDetailsService {
 
     UserResponseDTO registerUser(UserRequestDTO userRequestDTO);
 
-    UserResponseDTO findUserByUserCredential(UserCredentialDTO userCredentialDTO);
+    UserLoginResponseDTO userAuthentication(UserLoginCredentialDTO userLoginCredentialDTO);
 
     List<UserResponseDTO> getAllUsers();
 
@@ -23,4 +24,5 @@ public interface UserService extends UserDetailsService {
 
     UserResponseDTO deleteUserById(Long id);
 
+    UserResponseDTO findUserByUsername(String username);
 }
