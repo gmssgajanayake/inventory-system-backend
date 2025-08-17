@@ -44,7 +44,7 @@ public class SecurityConfig {
                         authorizeHttpRequestsCustomizer
                                 .requestMatchers(HttpMethod.POST,"/api/auth/login").permitAll()
                                 .requestMatchers(HttpMethod.POST,"api/auth/register").hasRole(ADMIN.name())
-                                .requestMatchers(HttpMethod.GET,"api/users").hasAnyRole(ADMIN.name(),USER.name())
+                                .requestMatchers(HttpMethod.GET,"api/users").hasAnyRole(ADMIN.name())
                                 .requestMatchers(HttpMethod.PUT,"api/users/**").hasRole(ADMIN.name())
                                 .requestMatchers(HttpMethod.DELETE,"api/users/**").hasRole(ADMIN.name())
                                 .requestMatchers(HttpMethod.GET,"/api/items").permitAll()

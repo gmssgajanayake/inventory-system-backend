@@ -56,4 +56,17 @@ public class AppWideExceptionHandler {
                 );
     }
 
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<StanderResponse> handleGenericException(Exception exception) {
+        return ResponseEntity
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(
+                        StanderResponse.builder()
+                                .statusCode(500)
+                                .message(exception.getMessage())
+                                .data(exception.getLocalizedMessage())
+                                .build()
+                );
+    }
+
 }
