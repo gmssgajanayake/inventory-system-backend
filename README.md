@@ -157,7 +157,7 @@ POST /api/auth/register
 {
   "username": "staff1",
   "password": "password123",
-  "role": "STAFF"
+  "role": "ADMIN"
 }
 ```
 

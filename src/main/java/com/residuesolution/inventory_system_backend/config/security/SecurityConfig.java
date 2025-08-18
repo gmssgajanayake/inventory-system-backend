@@ -13,6 +13,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import java.util.Arrays;
+
 import static com.residuesolution.inventory_system_backend.config.permission.Role.ADMIN;
 import static com.residuesolution.inventory_system_backend.config.permission.Role.USER;
 
@@ -32,8 +34,6 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http ) throws Exception {
-
-
 
        return http
                 .csrf(csrfConfigurer -> csrfConfigurer.disable())
