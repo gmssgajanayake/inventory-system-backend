@@ -9,6 +9,7 @@ import com.residuesolution.inventory_system_backend.repository.UserRepo;
 import com.residuesolution.inventory_system_backend.service.JWTService;
 import com.residuesolution.inventory_system_backend.service.UserService;
 import com.residuesolution.inventory_system_backend.util.mapper.UserMapper;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -28,7 +29,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepo userRepo;
     private final UserMapper userMapper;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
-    private  final JWTService jwtService;
+    private final JWTService jwtService;
 
     public UserServiceImpl(UserRepo userRepo, UserMapper userMapper, BCryptPasswordEncoder bCryptPasswordEncoder, JWTService jwtService) {
         this.userRepo = userRepo;
@@ -58,7 +59,7 @@ public class UserServiceImpl implements UserService {
             claims.put("username", userLoginCredentialDTO.getUsername());
             claims.put("role", userEntityDetails.getRole().toString());
 
-            userLoginResponseDTO.setToken(jwtService.getToken(userLoginResponseDTO.getUsername(),claims));
+            userLoginResponseDTO.setToken(jwtService.getToken(userLoginResponseDTO.getUsername(), claims));
             userLoginResponseDTO.setExpirDate(new Date());
 
             return userLoginResponseDTO;
@@ -111,7 +112,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean isAdminExists() {
         return userRepo.findAll().stream().map(
-                userEntity-> userEntity.getRole()
+                userEntity -> userEntity.getRole()
         ).anyMatch(role -> role.equals(ADMIN));
     }
 
@@ -123,7 +124,7 @@ public class UserServiceImpl implements UserService {
 
         return User.withUsername(userDetails.getUsername())
                 .password(userDetails.getPassword())
-                .roles(userDetails.getRole() == ADMIN ? ADMIN.name()  : USER.name())
+                .roles(userDetails.getRole() == ADMIN ? ADMIN.name() : USER.name())
                 .build();
 
     }
