@@ -98,7 +98,7 @@ The backend is secured with **Spring Security + JWT** and supports **Role-Based 
 
 ---
 
-## Setup and Installation ⚙️
+## Setup and Installation ⚙️ 
 
 1. **Clone the repository**
 
@@ -129,24 +129,26 @@ spring.jpa.hibernate.ddl-auto=update
 mvn clean install
 mvn spring-boot:run
 ```
-
 ---
 
 ## Initial Admin User 👤
 
-To create a default admin user in MySQL at the initial setup, run the following query (replace `adminpassword` with your desired password hashed using BCrypt):
+An **admin user is now auto-generated** at initial setup.
 
-```sql
-INSERT INTO users (username, password, role) 
-VALUES ('admin', '$2a$10$JhRmidhJSEik9HF.azdZGO3pXsFeU5sRo0jp85NN9Wbw1I/chxgLa', 'ADMIN');
-```
+- **Username:** `admin`
+- **Password:** `admin123`
 
-> Note: `$2a$10$JhRmidhJSEik9HF.azdZGO3pXsFeU5sRo0jp85NN9Wbw1I/chxgLa` is an example BCrypt hash for admin1234. Generate your own hash for security.
+You don’t need to create an initial admin user manually in MySQL anymore.
+
+> Note: The default admin (`ADMIN`) is only for initial access.  
+> It is strongly recommended to **create a new admin account** and then **delete the default one** for better security.
 
 
 Application runs at: `http://localhost:8080/auth/login`
 
 ---
+
+
 
 ## Sample Requests 📝
 
